@@ -5,7 +5,9 @@ pipeline{
     stages{
         stage("Build"){
             steps{
-                sh './gradlew clean build'
+                dir('demo-project/hello-world'){
+                    sh './gradlew clean build'
+                }
             }
             post{
                 always{
