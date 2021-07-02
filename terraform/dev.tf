@@ -1,3 +1,23 @@
+variable "ip_whitelist" {
+  type = list(string)
+}
+
+variable "instance_image_id" {
+  type = string
+}
+variable "instance_type" {
+  type = string
+}
+variable "scaling_desired_capacity" {
+  type = number
+}
+variable "scaling_max_size" {
+  type = number
+}
+variable "scaling_min_size" {
+  type = number
+}
+
 provider "aws" {
   profile = "default"
   region  = "eu-central-1"
@@ -50,7 +70,7 @@ resource "aws_security_group" "dev_web" {
     from_port   = 0
     to_port     = 0
     protocol    = "-1" #allow all protocols
-    cidr_blocks = ["0.0.0.0/0"]
+    cidr_blocks = var.ip_whitelist
   }
 
   tags = {
@@ -82,15 +102,15 @@ resource "aws_elb" "dev_web" {
 
 resource "aws_launch_template" "dev_web" {
   name_prefix   = "dev-web"
-  image_id      = "ami-01b4c2304da3f0c4f" #Bitnami nginx image
-  instance_type = "t2.nano"
+  image_id      =  var.instance_image_id
+  instance_type = var.instance_type
   vpc_security_group_ids = [ aws_security_group.dev_web.id ]
 }
 
 resource "aws_autoscaling_group" "dev_web" {
-  desired_capacity    = 1
-  max_size            = 2
-  min_size            = 1
+  desired_capacity    = var.scaling_desired_capacity
+  max_size            = var.scaling_max_size
+  min_size            = var.scaling_min_size
 
   vpc_zone_identifier = [aws_default_subnet.default_az1.id, aws_default_subnet.default_az2.id]
 
