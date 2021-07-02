@@ -33,7 +33,7 @@ resource "aws_default_subnet" "default_az2" {
 resource "aws_security_group" "dev_web" {
   name        = "dev_web"
   description = "Allow standard http and https ports inbound and everything outbound"
-  
+
   ingress {
     from_port   = 80
     to_port     = 80
@@ -64,8 +64,8 @@ resource "aws_instance" "dev_web" {
   ami           = "ami-01b4c2304da3f0c4f"
   instance_type = "t2.nano"
 
-  vpc_security_group_ids = [ 
-    aws_security_group.dev_web.id 
+  vpc_security_group_ids = [
+    aws_security_group.dev_web.id
   ]
 
   tags = {
@@ -80,6 +80,29 @@ resource "aws_eip" "dev_web" {
 }
 
 resource "aws_eip_association" "dev_web" {
-  instance_id  = aws_instance.dev_web.0.id
+  instance_id   = aws_instance.dev_web.0.id
   allocation_id = aws_eip.dev_web.id
+}
+
+resource "aws_elb" "dev_web" {
+  name      = "dev-web"
+  instances = aws_instance.dev_web.*.id
+  subnets = [
+    aws_default_subnet.default_az1.id,
+    aws_default_subnet.default_az2.id
+  ]
+  security_groups = [
+    aws_security_group.dev_web.id
+  ]
+
+  listener {
+    instance_port     = 80
+    instance_protocol = "http"
+    lb_port           = 80
+    lb_protocol       = "http"
+  }
+
+  tags = {
+    "Terraform" : "true"
+  }
 }
