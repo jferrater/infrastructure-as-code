@@ -6,10 +6,28 @@ provider "aws" {
 resource "aws_s3_bucket" "dev_s3_bucket" {
   bucket = "dev-s3-bucket-20210701"
   acl    = "private"
+
+  tags = {
+    "Terraform" : "true"
+  }
 }
 
-resource "aws_default_vpc" "default" {
-  
+resource "aws_default_vpc" "default" {}
+
+resource "aws_default_subnet" "default_az1" {
+  availability_zone = "eu-central-1a"
+
+  tags = {
+    "Terraform" : "true"
+  }
+}
+
+resource "aws_default_subnet" "default_az2" {
+  availability_zone = "eu-central-1b"
+
+  tags = {
+    "Terraform" : "true"
+  }
 }
 
 resource "aws_security_group" "dev_web" {
@@ -60,6 +78,6 @@ resource "aws_eip" "dev_web" {
 }
 
 resource "aws_eip_association" "dev_web" {
-  instance = aws_instance.dev_web.id
+  instance_id  = aws_instance.dev_web.id
   allocation_id = aws_eip.dev_web.id
 }
