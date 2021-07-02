@@ -7,3 +7,7 @@ resource "aws_s3_bucket" "dev_s3_bucket" {
   bucket = "dev_s3_bucket_20210701"
   acl = "private"
 }
+
+resource "aws_default_vpc" "default" {
+  
+}
