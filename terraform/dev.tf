@@ -59,6 +59,8 @@ resource "aws_security_group" "dev_web" {
 }
 
 resource "aws_instance" "dev_web" {
+  count = 2
+
   ami           = "ami-01b4c2304da3f0c4f"
   instance_type = "t2.nano"
 
@@ -78,6 +80,6 @@ resource "aws_eip" "dev_web" {
 }
 
 resource "aws_eip_association" "dev_web" {
-  instance_id  = aws_instance.dev_web.id
+  instance_id  = aws_instance.dev_web.0.id
   allocation_id = aws_eip.dev_web.id
 }
