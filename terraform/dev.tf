@@ -54,9 +54,12 @@ resource "aws_instance" "dev_web" {
 }
 
 resource "aws_eip" "dev_web" {
-  instance = aws_instance.dev_web.id
-
   tags = {
     "Terraform" : "true"
   }
+}
+
+resource "aws_eip_association" "dev_web" {
+  instance = aws_instance.dev_web.id
+  allocation_id = aws_eip.dev_web.id
 }
