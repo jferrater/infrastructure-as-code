@@ -58,35 +58,8 @@ resource "aws_security_group" "dev_web" {
   }
 }
 
-resource "aws_instance" "dev_web" {
-  count = 2
-
-  ami           = "ami-01b4c2304da3f0c4f"
-  instance_type = "t2.nano"
-
-  vpc_security_group_ids = [
-    aws_security_group.dev_web.id
-  ]
-
-  tags = {
-    "Terraform" : "true"
-  }
-}
-
-resource "aws_eip" "dev_web" {
-  tags = {
-    "Terraform" : "true"
-  }
-}
-
-resource "aws_eip_association" "dev_web" {
-  instance_id   = aws_instance.dev_web.0.id
-  allocation_id = aws_eip.dev_web.id
-}
-
 resource "aws_elb" "dev_web" {
   name      = "dev-web"
-  instances = aws_instance.dev_web.*.id
   subnets = [
     aws_default_subnet.default_az1.id,
     aws_default_subnet.default_az2.id
@@ -105,4 +78,34 @@ resource "aws_elb" "dev_web" {
   tags = {
     "Terraform" : "true"
   }
+}
+
+resource "aws_launch_template" "dev_web" {
+  name_prefix   = "dev-web"
+  image_id      = "ami-01b4c2304da3f0c4f" #Bitnami nginx image
+  instance_type = "t2.nano"
+  vpc_security_group_ids = [ aws_security_group.dev_web.id ]
+}
+
+resource "aws_autoscaling_group" "dev_web" {
+  desired_capacity    = 1
+  max_size            = 2
+  min_size            = 1
+
+  vpc_zone_identifier = [aws_default_subnet.default_az1.id, aws_default_subnet.default_az2.id]
+
+  launch_template {
+    id      = aws_launch_template.dev_web.id
+    version = "$Latest"
+  }
+}
+
+resource "aws_autoscaling_attachment" "dev_web" {
+  autoscaling_group_name = aws_autoscaling_group.dev_web.id
+  elb                    = aws_elb.dev_web.id
+}
+
+output "website" {
+  value = aws_elb.dev_web.dns_name
+  description = "The domain name of the load balancer, the gateway to access the Bitnami website"
 }
