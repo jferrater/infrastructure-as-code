@@ -1,5 +1,6 @@
 .DS_Store
-terraform/bin/terraform
-terraform/.terraform/
-terraform/*.backup
-terraform/*.plan
+**/bin/terraform
+**/.terraform/
+**/*.backup
+**/*.plan
+**/*.tfstate
