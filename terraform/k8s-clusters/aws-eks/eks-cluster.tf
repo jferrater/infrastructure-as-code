@@ -4,12 +4,6 @@ module "eks" {
   cluster_version = "1.20"
   subnets         = module.vpc.private_subnets
 
-  tags = {
-    Environment = "training"
-    GithubRepo  = "terraform-aws-eks"
-    GithubOrg   = "terraform-aws-modules"
-  }
-
   vpc_id = module.vpc.vpc_id
 
   workers_group_defaults = {
@@ -32,6 +26,9 @@ module "eks" {
       asg_desired_capacity          = 1
     },
   ]
+  
+  write_kubeconfig = true
+  kubeconfig_output_path = "./"
 }
 
 data "aws_eks_cluster" "cluster" {
