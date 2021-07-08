@@ -1,0 +1,21 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: hello-jolly-deployment
+  labels:
+    app: hello-jolly
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: hello-jolly
+  template:
+    metadata:
+      labels:
+        app: hello-jolly
+    spec:
+      containers:
+      - name: hello-jolly
+        image: jmferrater/hello-jolly-app:0.1
+        ports:
+        - containerPort: 8080
