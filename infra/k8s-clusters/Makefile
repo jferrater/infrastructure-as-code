@@ -30,12 +30,12 @@ $(TERRAFORM):
 install: $(TERRAFORM)
 
 .PHONY: init
-init:
+init: install
 	cd environments/$(ENVIRONMENT) && \
 		terraform init
 
 .PHONY: plan
-plan:
+plan: init
 	cd environments/$(ENVIRONMENT) && \
 		terraform plan
 
