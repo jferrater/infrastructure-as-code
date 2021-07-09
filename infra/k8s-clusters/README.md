@@ -6,7 +6,7 @@ Deploys four Kubernetes Clusters (dev, qa, staging, prod) in AWS EKS.
 - ``aws-iam.authenticator``
     - https://docs.aws.amazon.com/eks/latest/userguide/install-aws-iam-authenticator.html
 
-### Quick start
+## Quick start
 1. Initialize environment (Valid values: dev, qa, staging, prod)
     ``make init ENVIRONMENT=qa``
 2. Check terraform plan of an environment.
