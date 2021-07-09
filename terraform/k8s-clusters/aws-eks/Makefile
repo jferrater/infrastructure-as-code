@@ -21,8 +21,7 @@ $(TERRAFORM):
 	cd build/$(TERRAFORM_VERSION) && \
 	curl -O https://releases.hashicorp.com/terraform/$(TERRAFORM_VERSION)/$(TERRAFORM_ZIP) && \
 	unzip $(TERRAFORM_ZIP) && \
-	rm -rf $(TERRAFORM_ZIP) && \
-	cp $(TERRAFORM) $(HOME)/.local/bin
+	rm -rf $(TERRAFORM_ZIP)
 
 .PHONY: path 
 path: 
