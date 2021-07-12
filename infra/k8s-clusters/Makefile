@@ -59,6 +59,7 @@ deploy:
 		terraform apply
 
 .PHONY: destroy
+destroy:
 	cd environments/$(ENVIRONMENT) && \
 		terraform destroy
 

@@ -32,3 +32,11 @@ output "cluster_name" {
   description = "Kubernetes Cluster Name"
   value       = local.cluster_name
 }
+
+output "aws_security_group_1" {
+  value = aws_security_group.worker_group_mgmt_one.id
+}
+
+output "aws_security_group_2" {
+  value = aws_security_group.worker_group_mgmt_two.id
+}

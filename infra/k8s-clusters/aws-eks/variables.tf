@@ -7,3 +7,8 @@ variable "environment" {
   default = "dev"
   type    = string
 }
+
+variable "worker_groups" {
+  default = []
+  type = any
+}
