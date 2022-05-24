@@ -1,0 +1,62 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: demo-v1
+spec:
+  selector:
+    matchLabels:
+      app: demo-v1
+  template:
+    metadata:
+      labels:
+        app: demo-v1
+    spec:
+      containers:
+      - name: demo 
+        image: registry.kamilbaran.pl/training/kubernetes/demo-app:v1
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: demo-v1
+spec:
+  selector:
+    app: demo-v1
+  ports:
+  - port: 80
+    protocol: TCP
+    targetPort: 8080
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: demo-v2
+spec:
+  selector:
+    matchLabels:
+      app: demo-v2
+  template:
+    metadata:
+      labels:
+        app: demo-v2
+    spec:
+      containers:
+      - name: demo 
+        image: registry.kamilbaran.pl/training/kubernetes/demo-app:v2
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: demo-v2
+spec:
+  selector:
+    app: demo-v2
+  ports:
+  - port: 80
+    protocol: TCP
+    targetPort: 8080
+ 
